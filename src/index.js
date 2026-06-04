@@ -10,8 +10,8 @@ const PORT = process.env.PORT || 3001
 app.use(cors())
 app.use(express.json())
 
-app.use(' /api/auth', authRoutes)
+app.use('/api/auth', authRoutes)
 
-app.get('/', (req, res) => res.json({ status: 'SetLog API running' }))
+app.get('/', (req, res) => res.json({ status: 'FestiLog API running' }))
 
 app.listen(PORT, () => console.log(`Server on port ${PORT}`))
