@@ -4,14 +4,14 @@ const bcrypt = require('bcryptjs')         // hashes passwords so they're not st
 const jwt = require('jsonwebtoken')        // signs and verifies tokens
 const prisma = require('../lib/prisma')    // database client from lib/prisma.js
 
-// POST: register
+// POST: /register
 router.post('/register', async (req, res) => {
     const { email, username, password } = req.body
     if (!email || !username || !password) {
         return res.status(400).json({ error: 'All fields required' })  //400: bad request; client error
     }
     try {
-        const hash = await bcrypt.hash(password, 10)    // awwait waits for the hashing to finish before mvoing to next line; 10 rounds of hashing
+        const hash = await bcrypt.hash(password, 10)    // await waits for the hashing to finish before mvoing to next line; 10 rounds of hashing
         const user = await prisma.user.create({         // inserts a new row into users table
             data: { email, username, password: hash }
         })
@@ -46,7 +46,7 @@ router.post('/login', async(req, res) => {
         }                                                            // otherwise, return a token
 
         const token = jwt.sign(
-            { userID: user.id },
+            { userId: user.id },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         )
