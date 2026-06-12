@@ -23,12 +23,22 @@ router.post('/', authMiddleware, async(req, res) => {
             })
             res.status(201).json({ event })  // res.json() defaults to 200 automatically
         } catch (e) {
-            console.log(e)
             res.status(500).json({ error: 'Server error' })
         }
 
     }
 )
+
+// GET /api/events - gets all events in db
+    router.get('/', authMiddleware, async(req, res) => {
+        const userId = req.userId
+        try {
+            const event = await prisma.event.findMany({ where: { userId } })
+            res.status(201).json({ event })
+        } catch (e) {
+            res.json({ error: 'Server error' })
+        }
+    })
 
 
 module.exports = router
