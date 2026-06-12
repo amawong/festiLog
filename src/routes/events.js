@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const prisma = require('../lib/prisma')               // database connection
 const authMiddleware = require('../middleware/auth')  // security
+const { route } = require('./auth')
 
 // POST /api/events - log a new event
 router.post('/', authMiddleware, async(req, res) => {
@@ -36,9 +37,29 @@ router.post('/', authMiddleware, async(req, res) => {
             const event = await prisma.event.findMany({ where: { userId } })
             res.status(201).json({ event })
         } catch (e) {
-            res.json({ error: 'Server error' })
+            res.status(500).json({ error: 'Server error' })
         }
     })
+
+// GET /api/events/:id - gets single events by id
+    router.get('/:id', authMiddleware, async(req, res) => {   // tell Express to expect an ID in the URL
+        const { id } = req.params  // URL params live in req.params not req.body
+        try {
+            const event = await prisma.event.findUnique({ where: { id } })
+            if (!event) {
+                return res.status(404).json({ error: 'Not Found' })
+            }
+            if (event.userId !== req.userId) {
+                return res.status(403).json({ error: 'Unauthorized' })
+            } 
+            res.json({ event })
+        } catch (e) {
+            res.status(500).json({ error: 'Server error' })
+        }
+
+    })
+
+
 
 
 module.exports = router
