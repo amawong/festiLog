@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const prisma = require('../lib/prisma')               // database connection
 const authMiddleware = require('../middleware/auth')  // security
-const { route } = require('./auth')
 
 // POST /api/events - log a new event
 router.post('/', authMiddleware, async(req, res) => {
@@ -16,7 +15,7 @@ router.post('/', authMiddleware, async(req, res) => {
     try {
             const parsedDate =  new Date(date)
             if (isNaN(parsedDate)) {
-                return res.status(400).json({ error: 'Invalid date fromat'})
+                return res.status(400).json({ error: 'Invalid date format'})
             }
             
             const event = await prisma.event.create({
@@ -59,6 +58,55 @@ router.post('/', authMiddleware, async(req, res) => {
 
     })
 
+// PUT /api/events/:id - edit an event
+    router.put('/:id', authMiddleware, async(req, res) => {
+        const { name, venue, city, date, genre, notes } = req.body
+        const { id } = req.params           // destructuring is cleaner when pulling multiple vals; dot notation is valid too: const id = req.params.id
+        try {
+            const data = {name, venue, city, genre, notes}
+            if (date) {
+                const parsedDate = new Date(date)
+                if (isNaN(parsedDate)) {
+                    return res.status(400).json({ error: 'Invalid date format'})
+                }
+                data.date = parsedDate
+            }
+            
+            const event = await prisma.event.findUnique({ where: { id }})
+            if (!event) {
+                return res.status(404).json({ error: 'Not found' })
+            }
+            if (event.userId !== req.userId) {
+                return res.status(403).json({ error: 'Unauthorized' })
+            }
+            const updatedEvent = await prisma.event.update({ 
+                where: { id },
+                data 
+            })
+            res.json({ updatedEvent })
+        } catch (e) {
+            console.error(e)
+            res.status(500).json({ error: 'Server error' })
+        }
+    })
+
+// DELETE /api/events/:id - delete a single event
+    router.delete('/:id', authMiddleware, async(req, res) => {
+        const { id } = req.params
+        try {
+            const event = await prisma.event.findUnique({ where: { id } })
+            if (!event) {
+                return res.status(404).json({ error: 'Not found' })
+            }
+            if (event.userId !== req.userId) {
+                return res.status(403).json({ error: 'Unauthorized' })
+            }
+            await prisma.event.delete({ where: { id } })
+            res.json({ message: 'Event deleted' })
+        } catch (e) {
+            res.status(500).json({ error: 'Server error' })
+        }
+    })
 
 
 
