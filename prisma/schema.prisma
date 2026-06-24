@@ -32,7 +32,7 @@ model Event {
 
 model Artist {
   id        String  @id @default(uuid())
-  name      String
+  name      String  @unique
   spotifyId String? @unique
   genre     String?
   imageUrl  String?

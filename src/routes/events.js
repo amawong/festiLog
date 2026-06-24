@@ -85,7 +85,6 @@ router.post('/', authMiddleware, async(req, res) => {
             })
             res.json({ updatedEvent })
         } catch (e) {
-            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
     })
