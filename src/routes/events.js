@@ -34,7 +34,7 @@ const authMiddleware = require('../middleware/auth')  // security
         const userId = req.userId
         try {
             const event = await prisma.event.findMany({ where: { userId } })
-            res.status(201).json({ event })
+            res.json({ event })
         } catch (e) {
             res.status(500).json({ error: 'Server error' })
         }
@@ -44,7 +44,10 @@ const authMiddleware = require('../middleware/auth')  // security
     router.get('/:id', authMiddleware, async(req, res) => {   // tell Express to expect an ID in the URL
         const { id } = req.params  // URL params live in req.params not req.body
         try {
-            const event = await prisma.event.findUnique({ where: { id } })
+            const event = await prisma.event.findUnique({ 
+                where: { id },
+                include: {sets: { include: { artist: true } } }
+             })
             if (!event) {
                 return res.status(404).json({ error: 'Not Found' })
             }

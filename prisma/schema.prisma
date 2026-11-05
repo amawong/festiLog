@@ -42,7 +42,7 @@ model Artist {
 model Set {
   id        String    @id @default(uuid())
   eventId   String
-  event     Event     @relation(fields: [eventId], references: [id])
+  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   artistId  String
   artist    Artist    @relation(fields: [artistId], references: [id])
   startTime DateTime?
