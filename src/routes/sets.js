@@ -1,6 +1,5 @@
 const router = require('express').Router()
 const prisma = require('../lib/prisma')
-const auth = require('../middleware/auth')
 const authMiddleware = require('../middleware/auth')
 
 
@@ -35,8 +34,9 @@ const authMiddleware = require('../middleware/auth')
                     artist: { connect: { id: artistRecord.id } },
                     rating: parsedRating, 
                     startTime: startTime ? new Date(startTime) : null, 
-                    notes
-                }
+                    notes,
+                },
+                include: { artist: true }
             })
             res.status(201).json({ set })
         } catch (e) {

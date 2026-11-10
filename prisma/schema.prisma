@@ -35,7 +35,7 @@ model Artist {
   name      String  @unique
   spotifyId String? @unique
   genre     String?
-  imageUrl  String?
+  imageUrl  String? 
   sets      Set[]
 }
 
