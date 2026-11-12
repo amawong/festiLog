@@ -35,6 +35,7 @@ router.get('/', authMiddleware, async(req, res) => {
         }).sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0))
         res.status(200).json({ ranked })
     } catch (e) {
+        console.error(e)
         res.status(500).json({ error: 'Server error'})
     }
 })
@@ -57,6 +58,7 @@ router.get('/:id', authMiddleware, async(req, res) => {
         }
         res.json({ artist })
     } catch (e) {
+        console.error(e)
         res.status(500).json({ error: 'Server error' })
     }
 })

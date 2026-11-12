@@ -21,6 +21,7 @@ const authMiddleware = require('../middleware/auth')
             })
             res.status(200).json({ eventsCount, artistsCount, setsCount, avgRating: ratingData._avg.rating })
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
     })
@@ -41,6 +42,7 @@ const authMiddleware = require('../middleware/auth')
             }, {})
             res.status(200).json({ timeline })
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
     })

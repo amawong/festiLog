@@ -22,6 +22,7 @@ router.post('/register', async (req, res) => {
         )
         res.status(201).json({ token, user: { id: user.id, email, username } }) // 201: created
     } catch (e) {
+        console.error(e)
         if (e.code === 'P2002') {    // P2002 is prisma's error code for a unique constraint violation
             return res.status(409).json({ error: 'Email or username taken'}) // 409: conflict
         }
@@ -52,6 +53,7 @@ router.post('/login', async(req, res) => {
         )
         res.status(200).json({ token, user: { id: user.id, email: user.email, username: user.username }})  // res.json() defaults to 200 automatically
     } catch (e) {
+        console.error(e)
         res.status(500).json({ error: 'Server error' })
     }
 }

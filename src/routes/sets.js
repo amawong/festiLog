@@ -40,6 +40,7 @@ const authMiddleware = require('../middleware/auth')
             })
             res.status(201).json({ set })
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server Error' })
         }
     })
@@ -82,6 +83,7 @@ const authMiddleware = require('../middleware/auth')
             res.status(200).json({ updatedSet })
 
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
     })
@@ -103,6 +105,7 @@ const authMiddleware = require('../middleware/auth')
             await prisma.set.delete({ where: { id }})
             res.json({ message: 'Set deleted' })
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
     })

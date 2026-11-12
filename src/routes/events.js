@@ -23,6 +23,7 @@ const authMiddleware = require('../middleware/auth')  // security
             })
             res.status(201).json({ event })  // res.json() defaults to 200 automatically
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
 
@@ -36,6 +37,7 @@ const authMiddleware = require('../middleware/auth')  // security
             const event = await prisma.event.findMany({ where: { userId } })
             res.json({ event })
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
     })
@@ -56,6 +58,7 @@ const authMiddleware = require('../middleware/auth')  // security
             } 
             res.json({ event })
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
 
@@ -88,6 +91,7 @@ const authMiddleware = require('../middleware/auth')  // security
             })
             res.json({ updatedEvent })
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
     })
@@ -106,6 +110,7 @@ const authMiddleware = require('../middleware/auth')  // security
             await prisma.event.delete({ where: { id } })
             res.json({ message: 'Event deleted' })
         } catch (e) {
+            console.error(e)
             res.status(500).json({ error: 'Server error' })
         }
     })
